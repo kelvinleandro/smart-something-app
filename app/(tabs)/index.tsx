@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 import useTheme from '@/hooks/useTheme';
 
 export default function HomeScreen() {

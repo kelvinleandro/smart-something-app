@@ -1,6 +1,6 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import Animated, { FadeIn, FadeOut, LinearTransition, SlideInDown, SlideInUp } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, LinearTransition, SlideInDown } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
