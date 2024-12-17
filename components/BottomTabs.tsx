@@ -96,6 +96,7 @@ export default BottomTabs;
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
+    zIndex: 10,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
