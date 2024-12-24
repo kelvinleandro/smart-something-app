@@ -1,11 +1,8 @@
 import React from "react";
-import { Text, StyleSheet, Pressable, TouchableHighlight, ViewStyle, StyleProp } from "react-native";
+import { Text, StyleSheet, TouchableHighlight, ViewStyle, StyleProp } from "react-native";
 import Animated, {
   AnimatedStyle,
   FadeIn,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
 } from "react-native-reanimated";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import useTheme from "@/hooks/useTheme";
@@ -21,20 +18,9 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableHighlight);
 
 const DeviceCard = ({ deviceInfo, onSelect, onLongPress, style }: DeviceCardProps) => {
   const theme = useTheme();
-  // const scale = useSharedValue(1);
-
-  // const animatedStyle = useAnimatedStyle(() => ({
-  //   transform: [{ scale: scale.value }],
-  // }));
 
   return (
     <AnimatedTouchable
-      // onPressIn={() => {
-      //   scale.value = withTiming(0.9, { duration: 100 });
-      // }}
-      // onPressOut={() => {
-      //   scale.value = withTiming(1, { duration: 100 });
-      // }}
       onPress={onSelect}
       onLongPress={onLongPress}
       activeOpacity={1}

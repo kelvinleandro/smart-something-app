@@ -16,7 +16,6 @@ import DraggableFlatList, {
 import useTheme from "@/hooks/useTheme";
 import Dialog from "@/components/Dialog";
 import DeviceCard from "@/components/DeviceCard";
-import { useNavigation } from "expo-router";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -27,7 +26,6 @@ export default function HomeScreen() {
     { id: 3, deviceInfo: "Device 3" },
     { id: 4, deviceInfo: "Device 4" },
   ]);
-  const ref = useRef(null);
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -71,7 +69,6 @@ export default function HomeScreen() {
         </TouchableHighlight>
 
         <DraggableFlatList
-          ref={ref}
           data={devices}
           numColumns={2}
           keyExtractor={(item) => `${item.id}`}
