@@ -1,86 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, Animated, TouchableWithoutFeedback, StyleSheet, useAnimatedValue } from 'react-native';
+import React from "react";
+import { Text, StyleSheet, Pressable, TouchableHighlight, ViewStyle, StyleProp } from "react-native";
+import Animated, {
+  AnimatedStyle,
+  FadeIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import useTheme from "@/hooks/useTheme";
 
 type DeviceCardProps = {
-  deviceInfo: string;
-  deviceImage: string;
-  onPress: () => void;
-  onLongPress: () => void;
-  onPressOut: () => void;
+  deviceInfo?: string;
+  onSelect: () => void;
+  onLongPress?: () => void;
+  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
 };
 
-const DeviceCard = () => {
-  const scale = useAnimatedValue(1);
-  const [popoverVisible, setPopoverVisible] = useState(false);
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableHighlight);
 
-  const handleLongPress = () => {
-    Animated.spring(scale, {
-      toValue: 0.9,
-      useNativeDriver: true,
-    }).start();
-    setPopoverVisible(true);
-  };
+const DeviceCard = ({ deviceInfo, onSelect, onLongPress, style }: DeviceCardProps) => {
+  const theme = useTheme();
+  // const scale = useSharedValue(1);
 
-  const handlePressOut = () => {
-    Animated.spring(scale, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-    setPopoverVisible(false);
-  };
+  // const animatedStyle = useAnimatedStyle(() => ({
+  //   transform: [{ scale: scale.value }],
+  // }));
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback
-        onLongPress={handleLongPress}
-        onPressOut={handlePressOut}
-      >
-        <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
-          <Text style={styles.cardText}>Card Content</Text>
-        </Animated.View>
-      </TouchableWithoutFeedback>
-
-      {popoverVisible && (
-        <View style={styles.popover}>
-          <Text style={styles.popoverText}>Popover Content</Text>
-        </View>
-      )}
-    </View>
+    <AnimatedTouchable
+      // onPressIn={() => {
+      //   scale.value = withTiming(0.9, { duration: 100 });
+      // }}
+      // onPressOut={() => {
+      //   scale.value = withTiming(1, { duration: 100 });
+      // }}
+      onPress={onSelect}
+      onLongPress={onLongPress}
+      activeOpacity={1}
+      underlayColor={theme.tabIconSelected}
+      style={[
+        styles.touchable,
+        { backgroundColor: theme.tabIconSelected },
+        style
+      ]}
+    >
+      <Animated.View entering={FadeIn} style={styles.card}>
+        <MaterialIcons name="phone-iphone" size={40} color={theme.text} />
+        <Text style={[styles.cardText, { color: theme.text }]}>
+          {deviceInfo}
+        </Text>
+      </Animated.View>
+    </AnimatedTouchable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  touchable: {
+    width: "100%",
+    borderRadius: 12,
   },
   card: {
-    width: 200,
-    height: 300,
-    backgroundColor: 'lightblue',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    height: 100,
   },
   cardText: {
     fontSize: 18,
-    color: 'black',
-  },
-  popover: {
-    position: 'absolute',
-    top: 50,
-    left: 50,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  popoverText: {
-    fontSize: 16,
-    color: 'black',
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
 

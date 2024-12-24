@@ -10,6 +10,7 @@ export default function TabLayout() {
     <Tabs
       tabBar={(props) => <BottomTabs {...props} />}
       screenOptions={{
+        // animation: "shift",
         headerShown: false,
         tabBarActiveTintColor: theme.tabItemActive,
         tabBarInactiveTintColor: theme.tabItemInactive,
@@ -17,7 +18,7 @@ export default function TabLayout() {
         tabBarInactiveBackgroundColor: theme.tabBarBackground,
         sceneStyle: {
           backgroundColor: theme.background,
-        }
+        },
       }}
     >
       <Tabs.Screen

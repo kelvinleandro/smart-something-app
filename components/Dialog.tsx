@@ -1,7 +1,6 @@
 import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
   FadeIn,
-  FadeOut,
   ZoomIn,
   ZoomOut,
 } from "react-native-reanimated";
@@ -21,15 +20,18 @@ type DialogProps = {
 const Dialog = ({ children, onClose, isOpen }: DialogProps) => {
   return (
     isOpen && (
-      <TouchableWithoutFeedback onPress={onClose}>
-        <Animated.View
-          entering={FadeIn.duration(300)}
-          exiting={ZoomOut.duration(300)}
-          style={styles.container}
-        >
-          {children}
-        </Animated.View>
-      </TouchableWithoutFeedback>
+      <Animated.View
+        entering={ZoomIn.duration(150)}
+        exiting={ZoomOut.duration(150)}
+        style={[
+          styles.container,
+          // !isOpen && { opacity: 0, pointerEvents: "none" },
+        ]}
+      >
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.overlay}>{children}</View>
+        </TouchableWithoutFeedback>
+      </Animated.View>
     )
   );
 };
@@ -52,7 +54,7 @@ export default Dialog;
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    zIndex: 100,
+    zIndex: 9999,
     top: 0,
     left: 0,
     right: 0,
@@ -61,6 +63,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
   content: {
     borderRadius: 30,
