@@ -5,6 +5,7 @@ import {
   Text,
   TouchableHighlight,
   FlatList,
+  Button,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import DraggableFlatList, {
@@ -13,9 +14,11 @@ import DraggableFlatList, {
   OpacityDecorator,
   useOnCellActiveAnimation,
 } from "react-native-draggable-flatlist";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
 import Dialog from "@/components/Dialog";
 import DeviceCard from "@/components/DeviceCard";
+import { useNavigation } from "expo-router";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -26,35 +29,39 @@ export default function HomeScreen() {
     { id: 3, deviceInfo: "Device 3" },
     { id: 4, deviceInfo: "Device 4" },
   ]);
+  const navigation = useNavigation('/(tabs)');
 
   const handleOpenModal = () => {
     setOpen(true);
+    navigation.setOptions({ tabBarStyle: { display: 'none' } });
   };
 
   const handleCloseModal = () => {
     setOpen(false);
+    navigation.setOptions({ tabBarStyle: { display: undefined } });
   };
 
-  const renderItem = ({ item, drag, isActive }: any) => (
-    <ScaleDecorator>
-      <OpacityDecorator activeOpacity={0.7}>
-        <ShadowDecorator>
+  const renderItem = ({ item }: any) => (
+    // <ScaleDecorator>
+    //   <OpacityDecorator activeOpacity={0.7}>
+    //     <ShadowDecorator>
           <DeviceCard
             deviceInfo={item.deviceInfo}
             onSelect={handleOpenModal}
-            onLongPress={drag}
+            // onLongPress={drag}
             style={{
-              elevation: isActive ? 5 : 0,
+              // elevation: isActive ? 5 : 0,
+              width: '48%',
             }}
           />
-        </ShadowDecorator>
-      </OpacityDecorator>
-    </ScaleDecorator>
+    //     </ShadowDecorator>
+    //   </OpacityDecorator>
+    // </ScaleDecorator>
   );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <Animated.View layout={LinearTransition} style={styles.container}>
         <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
         <TouchableHighlight
           onPress={handleOpenModal}
@@ -68,7 +75,9 @@ export default function HomeScreen() {
           </View>
         </TouchableHighlight>
 
-        <DraggableFlatList
+        {/* <Button title="Hide tab" onPress={() => navigation.setOptions({ tabBarStyle: { display: 'none'} })} /> */}
+
+        {/* <DraggableFlatList
           data={devices}
           numColumns={2}
           keyExtractor={(item) => `${item.id}`}
@@ -76,16 +85,16 @@ export default function HomeScreen() {
           onDragEnd={({ data }) => setDevices(data)}
           contentContainerStyle={styles.devices}
           columnWrapperStyle={styles.columnWrapper}
-        />
+        /> */}
 
-        {/* <FlatList
+        <FlatList
           numColumns={2}
           data={devices}
           keyExtractor={(item) => `${item.id}`}
           renderItem={renderItem}
           contentContainerStyle={styles.devices}
           columnWrapperStyle={{ justifyContent: "space-between" }}
-        /> */}
+        />
 
         <Dialog isOpen={open} onClose={handleCloseModal}>
           <Dialog.Content>
@@ -99,7 +108,7 @@ export default function HomeScreen() {
             </View>
           </Dialog.Content>
         </Dialog>
-      </View>
+      </Animated.View>
     </GestureHandlerRootView>
   );
 }

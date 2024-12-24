@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SvgUri } from "react-native-svg";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
 
 export default function MapScreen() {
@@ -12,7 +13,7 @@ export default function MapScreen() {
   });
 
   return (
-    <View style={styles.container}>
+    <Animated.View layout={LinearTransition} style={styles.container}>
       <Text style={[styles.title, { color: theme.text }]}>Car Location</Text>
       <View style={styles.mapWrapper}>
         <MapView
@@ -39,7 +40,7 @@ export default function MapScreen() {
           </Marker>
         </MapView>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

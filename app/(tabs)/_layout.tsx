@@ -10,7 +10,7 @@ export default function TabLayout() {
     <Tabs
       tabBar={(props) => <BottomTabs {...props} />}
       screenOptions={{
-        // animation: "shift",
+        // animation: "fade",
         headerShown: false,
         tabBarActiveTintColor: theme.tabItemActive,
         tabBarInactiveTintColor: theme.tabItemInactive,

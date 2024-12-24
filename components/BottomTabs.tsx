@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import Animated, { FadeIn, FadeOut, LinearTransition, SlideInDown } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, LinearTransition, SlideInDown, SlideOutDown } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
@@ -12,10 +12,15 @@ const BottomTabs: React.FC<BottomTabBarProps> = ({
 }) => {
   const theme = useTheme();
 
+  const tabBarStyle = descriptors[state.routes[state.index].key]?.options
+  ?.tabBarStyle as object;
+  console.log(tabBarStyle);
+
   return (
     <Animated.View
       entering={SlideInDown.duration(400)}
-      style={[styles.container, { backgroundColor: theme.tabBarBackground }]}
+      exiting={SlideOutDown.duration(400)}
+      style={[styles.container, { backgroundColor: theme.tabBarBackground }, tabBarStyle]}
     >
       {state.routes.map((route, index) => {
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
@@ -52,6 +57,8 @@ const BottomTabs: React.FC<BottomTabBarProps> = ({
         return (
           <AnimatedTouchableOpacity
             layout={LinearTransition}
+            entering={SlideInDown.duration(200)}
+            exiting={SlideOutDown.duration(200)}
             key={route.key}
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
