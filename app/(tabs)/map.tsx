@@ -13,7 +13,7 @@ export default function MapScreen() {
   });
 
   return (
-    <Animated.View layout={LinearTransition} style={styles.container}>
+    <View style={styles.container}>
       <Text style={[styles.title, { color: theme.text }]}>Car Location</Text>
       <View style={styles.mapWrapper}>
         <MapView
@@ -40,7 +40,7 @@ export default function MapScreen() {
           </Marker>
         </MapView>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 

@@ -61,7 +61,7 @@ export default function HomeScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Animated.View layout={LinearTransition} style={styles.container}>
+      <View style={styles.container}>
         <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
         <TouchableHighlight
           onPress={handleOpenModal}
@@ -108,7 +108,7 @@ export default function HomeScreen() {
             </View>
           </Dialog.Content>
         </Dialog>
-      </Animated.View>
+      </View>
     </GestureHandlerRootView>
   );
 }
