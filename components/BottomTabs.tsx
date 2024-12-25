@@ -14,7 +14,6 @@ const BottomTabs: React.FC<BottomTabBarProps> = ({
 
   const tabBarStyle = descriptors[state.routes[state.index].key]?.options
   ?.tabBarStyle as object;
-  console.log(tabBarStyle);
 
   return (
     <Animated.View
@@ -68,7 +67,7 @@ const BottomTabs: React.FC<BottomTabBarProps> = ({
               styles.tabItem,
               {
                 backgroundColor: isFocused
-                  ? theme.text
+                  ? options.tabBarActiveBackgroundColor
                   : "transparent",
               },
             ]}
@@ -78,15 +77,15 @@ const BottomTabs: React.FC<BottomTabBarProps> = ({
               options.tabBarIcon({
                 focused: isFocused,
                 color: isFocused
-                  ? theme.tabBarBackground
-                  : theme.text,
+                  ? options.tabBarActiveTintColor!
+                  : options.tabBarInactiveTintColor!,
                 size: 24,
               })}
             {isFocused && (
               <Animated.Text
                 entering={FadeIn.duration(200)}
                 exiting={FadeOut.duration(200)}
-                style={[styles.text, { color: theme.tabBarBackground }]}
+                style={[styles.text, { color: options.tabBarActiveTintColor }]}
               >
                 {label as string}
               </Animated.Text>

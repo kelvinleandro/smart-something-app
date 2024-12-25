@@ -3,12 +3,13 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import BottomTabs from "@/components/BottomTabs";
 import useTheme from "@/hooks/useTheme";
 import { View } from "react-native";
+import ScreenContainer from "@/components/ScreenContainer";
 
 export default function TabLayout() {
   const theme = useTheme();
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <ScreenContainer>
       <Tabs
         tabBar={(props) => <BottomTabs {...props} />}
         screenOptions={{
@@ -16,8 +17,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarActiveTintColor: theme.tabItemActive,
           tabBarInactiveTintColor: theme.tabItemInactive,
-          tabBarActiveBackgroundColor: theme.tabBarBackground,
-          tabBarInactiveBackgroundColor: theme.tabBarBackground,
+          tabBarActiveBackgroundColor: theme.tabItemBackground,
           sceneStyle: {
             backgroundColor: theme.background,
           },
@@ -46,6 +46,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </View>
+    </ScreenContainer>
   );
 }

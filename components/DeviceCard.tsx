@@ -1,9 +1,12 @@
 import React from "react";
-import { Text, StyleSheet, TouchableHighlight, ViewStyle, StyleProp } from "react-native";
-import Animated, {
-  AnimatedStyle,
-  FadeIn,
-} from "react-native-reanimated";
+import {
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  ViewStyle,
+  StyleProp,
+} from "react-native";
+import Animated, { AnimatedStyle, FadeIn } from "react-native-reanimated";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import useTheme from "@/hooks/useTheme";
 
@@ -11,12 +14,17 @@ type DeviceCardProps = {
   deviceInfo?: string;
   onSelect: () => void;
   onLongPress?: () => void;
-  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
+  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>;
 };
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableHighlight);
 
-const DeviceCard = ({ deviceInfo, onSelect, onLongPress, style }: DeviceCardProps) => {
+const DeviceCard = ({
+  deviceInfo,
+  onSelect,
+  onLongPress,
+  style,
+}: DeviceCardProps) => {
   const theme = useTheme();
 
   return (
@@ -24,11 +32,11 @@ const DeviceCard = ({ deviceInfo, onSelect, onLongPress, style }: DeviceCardProp
       onPress={onSelect}
       onLongPress={onLongPress}
       activeOpacity={1}
-      underlayColor={theme.tabIconSelected}
+      underlayColor={theme.background2}
       style={[
         styles.touchable,
-        { backgroundColor: theme.tabIconSelected },
-        style
+        { backgroundColor: theme.cardBackground },
+        style,
       ]}
     >
       <Animated.View entering={FadeIn} style={styles.card}>

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { SvgUri } from "react-native-svg";
-import Animated, { LinearTransition } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
+import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
+import ScreenContainer from "@/components/ScreenContainer";
 
 export default function MapScreen() {
   const theme = useTheme();
@@ -13,9 +13,9 @@ export default function MapScreen() {
   });
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={[styles.title, { color: theme.text }]}>Car Location</Text>
-      <View style={styles.mapWrapper}>
+      <Animated.View entering={ZoomIn} style={styles.mapWrapper}>
         <MapView
           style={styles.map}
           region={{
@@ -32,15 +32,10 @@ export default function MapScreen() {
               }}
               style={styles.mapPin}
             />
-            {/* <SvgUri
-              width={30}
-              height={30}
-              uri="https://www.svgwaves.io/cutfiles/car-decals-43.svg"
-            /> */}
           </Marker>
         </MapView>
-      </View>
-    </View>
+      </Animated.View>
+    </ScreenContainer>
   );
 }
 

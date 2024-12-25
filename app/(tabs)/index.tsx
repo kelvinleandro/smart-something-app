@@ -1,24 +1,17 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableHighlight,
   FlatList,
-  Button,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import DraggableFlatList, {
-  ScaleDecorator,
-  ShadowDecorator,
-  OpacityDecorator,
-  useOnCellActiveAnimation,
-} from "react-native-draggable-flatlist";
-import Animated, { LinearTransition } from "react-native-reanimated";
 import useTheme from "@/hooks/useTheme";
 import Dialog from "@/components/Dialog";
 import DeviceCard from "@/components/DeviceCard";
 import { useNavigation } from "expo-router";
+import ScreenContainer from "@/components/ScreenContainer";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -29,11 +22,11 @@ export default function HomeScreen() {
     { id: 3, deviceInfo: "Device 3" },
     { id: 4, deviceInfo: "Device 4" },
   ]);
-  const navigation = useNavigation('/(tabs)');
+  const navigation = useNavigation("/(tabs)");
 
   const handleOpenModal = () => {
     setOpen(true);
-    navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    navigation.setOptions({ tabBarStyle: { display: "none" } });
   };
 
   const handleCloseModal = () => {
@@ -42,74 +35,50 @@ export default function HomeScreen() {
   };
 
   const renderItem = ({ item }: any) => (
-    // <ScaleDecorator>
-    //   <OpacityDecorator activeOpacity={0.7}>
-    //     <ShadowDecorator>
-          <DeviceCard
-            deviceInfo={item.deviceInfo}
-            onSelect={handleOpenModal}
-            // onLongPress={drag}
-            style={{
-              // elevation: isActive ? 5 : 0,
-              width: '48%',
-            }}
-          />
-    //     </ShadowDecorator>
-    //   </OpacityDecorator>
-    // </ScaleDecorator>
+    <DeviceCard
+      deviceInfo={item.deviceInfo}
+      onSelect={handleOpenModal}
+      style={{
+        width: "48%",
+      }}
+    />
   );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
-        <TouchableHighlight
-          onPress={handleOpenModal}
-          activeOpacity={1}
-          underlayColor={theme.tabBarBackground}
-        >
-          <View style={[styles.findDevice, { borderColor: theme.text }]}>
-            <Text style={[styles.findText, { color: theme.text }]}>
-              Find Device
+    <ScreenContainer style={styles.container}>
+      <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
+      <TouchableHighlight
+        onPress={handleOpenModal}
+        activeOpacity={1}
+        underlayColor={theme.tabBarBackground}
+      >
+        <View style={[styles.findDevice, { borderColor: theme.text }]}>
+          <Text style={[styles.findText, { color: theme.text }]}>
+            Find Device
+          </Text>
+        </View>
+      </TouchableHighlight>
+      <FlatList
+        numColumns={2}
+        data={devices}
+        keyExtractor={(item) => `${item.id}`}
+        renderItem={renderItem}
+        contentContainerStyle={styles.devices}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
+      />
+      <Dialog isOpen={open} onClose={handleCloseModal}>
+        <Dialog.Content>
+          <View style={{}}>
+            <Text style={[styles.dialogText, { color: theme.text }]}>
+              Name: Device name
+            </Text>
+            <Text style={[styles.dialogText, { color: theme.text }]}>
+              Type: Device type
             </Text>
           </View>
-        </TouchableHighlight>
-
-        {/* <Button title="Hide tab" onPress={() => navigation.setOptions({ tabBarStyle: { display: 'none'} })} /> */}
-
-        {/* <DraggableFlatList
-          data={devices}
-          numColumns={2}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          onDragEnd={({ data }) => setDevices(data)}
-          contentContainerStyle={styles.devices}
-          columnWrapperStyle={styles.columnWrapper}
-        /> */}
-
-        <FlatList
-          numColumns={2}
-          data={devices}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={renderItem}
-          contentContainerStyle={styles.devices}
-          columnWrapperStyle={{ justifyContent: "space-between" }}
-        />
-
-        <Dialog isOpen={open} onClose={handleCloseModal}>
-          <Dialog.Content>
-            <View style={{}}>
-              <Text style={[styles.dialogText, { color: theme.text }]}>
-                Name: Device name
-              </Text>
-              <Text style={[styles.dialogText, { color: theme.text }]}>
-                Type: Device type
-              </Text>
-            </View>
-          </Dialog.Content>
-        </Dialog>
-      </View>
-    </GestureHandlerRootView>
+        </Dialog.Content>
+      </Dialog>
+    </ScreenContainer>
   );
 }
 
