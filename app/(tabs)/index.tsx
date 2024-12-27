@@ -6,12 +6,12 @@ import {
   TouchableHighlight,
   FlatList,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import useTheme from "@/hooks/useTheme";
 import Dialog from "@/components/Dialog";
 import DeviceCard from "@/components/DeviceCard";
 import { useNavigation } from "expo-router";
 import ScreenContainer from "@/components/ScreenContainer";
+import ColorSchemeButton from "@/components/ColorSchemeButton";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -46,6 +46,8 @@ export default function HomeScreen() {
 
   return (
     <ScreenContainer style={styles.container}>
+      <ColorSchemeButton />
+
       <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
       <TouchableHighlight
         onPress={handleOpenModal}

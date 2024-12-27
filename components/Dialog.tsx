@@ -1,6 +1,5 @@
 import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
-  FadeIn,
   ZoomIn,
   ZoomOut,
 } from "react-native-reanimated";
@@ -25,7 +24,6 @@ const Dialog = ({ children, onClose, isOpen }: DialogProps) => {
         exiting={ZoomOut.duration(150)}
         style={[
           styles.container,
-          // !isOpen && { opacity: 0, pointerEvents: "none" },
         ]}
       >
         <TouchableWithoutFeedback onPress={onClose}>

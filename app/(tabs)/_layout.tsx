@@ -2,7 +2,6 @@ import { Tabs } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import BottomTabs from "@/components/BottomTabs";
 import useTheme from "@/hooks/useTheme";
-import { View } from "react-native";
 import ScreenContainer from "@/components/ScreenContainer";
 
 export default function TabLayout() {
