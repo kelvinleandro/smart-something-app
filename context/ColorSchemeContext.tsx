@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import * as SplashScreen from "expo-splash-screen";
 
 type ColorScheme = "light" | "dark";
 
@@ -23,14 +24,11 @@ export const ColorSchemeContext = createContext<ColorSchemeContextType | null>(n
 export const ColorSchemeProvider = ({ children }: { children: React.ReactNode }) => {
   const deviceColorScheme = useColorScheme();
   const [currentColorScheme, setCurrentScheme] = useState<ColorScheme>("dark");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // when device color scheme changes
   useEffect(() => {
-    if (deviceColorScheme !== currentColorScheme) {
-      setCurrentScheme(deviceColorScheme as ColorScheme);
-    }
-
-  }, [deviceColorScheme]);
+    SplashScreen.preventAutoHideAsync(); // Keep the splash screen visible
+  }, []);
 
   // on app startup
   useEffect(() => {
@@ -44,8 +42,20 @@ export const ColorSchemeProvider = ({ children }: { children: React.ReactNode })
         await AsyncStorage.setItem("colorScheme", systemColorScheme);
         setCurrentScheme(systemColorScheme);
       }
+
+      setIsLoading(false);
+      await SplashScreen.hideAsync();
     })();
   }, []);
+
+  // when device color scheme changes
+  useEffect(() => {
+    if (deviceColorScheme !== currentColorScheme) {
+      setCurrentScheme(deviceColorScheme as ColorScheme);
+    }
+
+  }, [deviceColorScheme]);
+
 
   const toggle = useCallback(
     async () => {
@@ -55,6 +65,11 @@ export const ColorSchemeProvider = ({ children }: { children: React.ReactNode })
     },
     [currentColorScheme]
   );
+
+  if (isLoading) {
+    // Optionally, you can return null here since the splash screen is handled by Expo
+    return null;
+  }
 
   return (
     <View style={{ flex: 1 }}>

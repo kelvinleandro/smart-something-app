@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "expo-router";
-import MapView, { Marker } from "react-native-maps";
+// import MapView, { Marker } from "react-native-maps";
 import useTheme from "@/hooks/useTheme";
 import ScreenContainer from "@/components/ScreenContainer";
 
@@ -27,9 +27,9 @@ export default function MapScreen() {
       {isFocused && (
         <>
           <Text style={[styles.title, { color: theme.text }]}>
-            Car Location
+            Car Location{"\n"}Needs to add maps API key
           </Text>
-          <View style={styles.mapWrapper}>
+          {/* <View style={styles.mapWrapper}>
             <MapView
               style={styles.map}
               region={{
@@ -48,7 +48,7 @@ export default function MapScreen() {
                 />
               </Marker>
             </MapView>
-          </View>
+          </View> */}
         </>
       )}
     </ScreenContainer>

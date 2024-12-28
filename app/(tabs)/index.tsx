@@ -46,9 +46,10 @@ export default function HomeScreen() {
 
   return (
     <ScreenContainer style={styles.container}>
-      <ColorSchemeButton />
-
-      <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
+      <View style={styles.titleContainer}>
+        <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
+        <ColorSchemeButton style={styles.schemeButton} />
+      </View>
       <TouchableHighlight
         onPress={handleOpenModal}
         activeOpacity={1}
@@ -122,4 +123,14 @@ const styles = StyleSheet.create({
   columnWrapper: {
     justifyContent: "space-between",
   },
+  titleContainer: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  schemeButton: {
+    position: 'absolute',
+    right: 6
+  }
 });

@@ -1,17 +1,17 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleProp, StyleSheet, TouchableOpacity, TouchableOpacityProps, ViewStyle } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import switchTheme from "react-native-theme-switch-animation";
 import { useScheme } from "@/hooks/useScheme";
 import useTheme from "@/hooks/useTheme";
 
-const ColorSchemeButton = () => {
+const ColorSchemeButton = ({style}: {style?: StyleProp<ViewStyle>}) => {
   const { currentColorScheme, toggle } = useScheme();
   const theme = useTheme();
 
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={style}
       onPress={(e) => {
         e.currentTarget.measure((x1, y1, width, height, px, py) => {
           switchTheme({
@@ -19,8 +19,8 @@ const ColorSchemeButton = () => {
               toggle();
             },
             animationConfig: {
-              type: "fade",
-              duration: 500,
+              type: currentColorScheme === "light" ? "circular" : "inverted-circular",
+              duration: 350,
               startingPoint: {
                 cy: py + height / 2,
                 cx: px + width / 2,
@@ -40,11 +40,3 @@ const ColorSchemeButton = () => {
 };
 
 export default ColorSchemeButton;
-
-const styles = StyleSheet.create({
-  button: {
-    position: "absolute",
-    top: 36,
-    right: 12,
-  },
-});
