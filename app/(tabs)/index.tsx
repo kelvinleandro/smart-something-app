@@ -1,27 +1,16 @@
-import { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableHighlight,
-  FlatList,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, View, Text, Button } from "react-native";
 import useTheme from "@/hooks/useTheme";
 import Dialog from "@/components/Dialog";
-import DeviceCard from "@/components/DeviceCard";
 import { useNavigation } from "expo-router";
 import ScreenContainer from "@/components/ScreenContainer";
 import ColorSchemeButton from "@/components/ColorSchemeButton";
+import { useTcpSocket } from "@/context/TcpSocketContext";
 
 export default function HomeScreen() {
+  const { sendToServer, response } = useTcpSocket();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [devices, setDevices] = useState([
-    { id: 1, deviceInfo: "Device 1" },
-    { id: 2, deviceInfo: "Device 2" },
-    { id: 3, deviceInfo: "Device 3" },
-    { id: 4, deviceInfo: "Device 4" },
-  ]);
   const navigation = useNavigation("/(tabs)");
 
   const handleOpenModal = () => {
@@ -34,15 +23,10 @@ export default function HomeScreen() {
     navigation.setOptions({ tabBarStyle: { display: undefined } });
   };
 
-  const renderItem = ({ item }: any) => (
-    <DeviceCard
-      deviceInfo={item.deviceInfo}
-      onSelect={handleOpenModal}
-      style={{
-        width: "48%",
-      }}
-    />
-  );
+  const handleTestServer = () => {
+    sendToServer("GET_DEVICE_STATE|1");
+    console.log(response);
+  };
 
   return (
     <ScreenContainer style={styles.container}>
@@ -50,25 +34,9 @@ export default function HomeScreen() {
         <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
         <ColorSchemeButton style={styles.schemeButton} />
       </View>
-      <TouchableHighlight
-        onPress={handleOpenModal}
-        activeOpacity={1}
-        underlayColor={theme.tabBarBackground}
-      >
-        <View style={[styles.findDevice, { borderColor: theme.text }]}>
-          <Text style={[styles.findText, { color: theme.text }]}>
-            Find Device
-          </Text>
-        </View>
-      </TouchableHighlight>
-      <FlatList
-        numColumns={2}
-        data={devices}
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={renderItem}
-        contentContainerStyle={styles.devices}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-      />
+
+      <Button title="Test Button" onPress={handleTestServer} />
+
       <Dialog isOpen={open} onClose={handleCloseModal}>
         <Dialog.Content>
           <View style={{}}>
@@ -130,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   schemeButton: {
-    position: 'absolute',
-    right: 6
-  }
+    position: "absolute",
+    right: 6,
+  },
 });
