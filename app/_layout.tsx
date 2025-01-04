@@ -4,12 +4,12 @@ import { TcpSocketProvider } from "@/context/TcpSocketContext";
 
 export default function Layout() {
   return (
-    <TcpSocketProvider>
-      <ColorSchemeProvider>
+    <ColorSchemeProvider>
+      <TcpSocketProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
-      </ColorSchemeProvider>
-    </TcpSocketProvider>
+      </TcpSocketProvider>
+    </ColorSchemeProvider>
   );
 }

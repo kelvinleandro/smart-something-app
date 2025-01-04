@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import Animated, {
   ZoomIn,
   ZoomOut,
@@ -8,6 +8,7 @@ import useTheme from "@/hooks/useTheme";
 
 interface DialogContentProps {
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 type DialogProps = {
@@ -34,12 +35,12 @@ const Dialog = ({ children, onClose, isOpen }: DialogProps) => {
   );
 };
 
-Dialog.Content = ({ children }: DialogContentProps) => {
+Dialog.Content = ({ children, style }: DialogContentProps) => {
   const theme = useTheme();
 
   return (
     <View
-      style={[styles.content, { backgroundColor: theme.background }]}
+      style={[styles.content, { backgroundColor: theme.background }, style]}
       onStartShouldSetResponder={() => true}
     >
       {children}

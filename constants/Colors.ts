@@ -8,6 +8,10 @@ export default {
     tabItemActive: '#78dcff',
     tabItemInactive: '#041834',
     tabItemBackground: '#041834', 
+    switchThumbActive: '#034ba5',
+    switchThumbInactive: '#ebf9ff',
+    switchTrackActive: '#ebf9ff',
+    switchTrackInactive: '#034ba5',
   },
   dark: {
     text: '#ebf9ff',
@@ -18,5 +22,9 @@ export default {
     tabItemActive: '#020b17',
     tabItemInactive: '#ebf9ff',
     tabItemBackground: '#ebf9ff',
+    switchThumbActive: '#034ba5',
+    switchThumbInactive: '#ebf9ff',
+    switchTrackActive: '#ebf9ff',
+    switchTrackInactive: '#034ba5',
   },
 };

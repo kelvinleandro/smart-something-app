@@ -8,12 +8,14 @@ import {
 } from "react-native";
 import Animated, { AnimatedStyle, FadeIn } from "react-native-reanimated";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import useTheme from "@/hooks/useTheme";
+import { DeviceID, DeviceStatus } from "@/types/devices";
+import { DEVICE_NAME } from "@/constants/Devices";
 
 type DeviceCardProps = {
-  deviceInfo?: string;
+  deviceInfo: DeviceStatus;
   onSelect: () => void;
-  onLongPress?: () => void;
   style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>;
 };
 
@@ -22,15 +24,28 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableHighlight);
 const DeviceCard = ({
   deviceInfo,
   onSelect,
-  onLongPress,
   style,
 }: DeviceCardProps) => {
   const theme = useTheme();
 
+  const deviceName = DEVICE_NAME[deviceInfo.id];
+
+  const Icon = () => {
+    switch (deviceInfo.id) {
+      case DeviceID.AC:
+        return <MaterialIcons name="air" size={40} color={theme.text} />;
+      case DeviceID.HEADLIGHT:
+        return <MaterialCommunityIcons name="car-light-high" size={40} color={theme.text} />;
+      case DeviceID.CAR_LOC:
+        return <MaterialCommunityIcons name="car-side" size={40} color={theme.text} />;
+      default:
+        return <MaterialIcons name="device-unknown" size={40} color={theme.text} />;
+    }
+  };
+
   return (
     <AnimatedTouchable
       onPress={onSelect}
-      onLongPress={onLongPress}
       activeOpacity={1}
       underlayColor={theme.background2}
       style={[
@@ -40,9 +55,9 @@ const DeviceCard = ({
       ]}
     >
       <Animated.View entering={FadeIn} style={styles.card}>
-        <MaterialIcons name="phone-iphone" size={40} color={theme.text} />
+        <Icon />
         <Text style={[styles.cardText, { color: theme.text }]}>
-          {deviceInfo}
+          {deviceName}
         </Text>
       </Animated.View>
     </AnimatedTouchable>
