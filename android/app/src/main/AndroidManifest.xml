@@ -28,5 +28,9 @@
         <data android:scheme="com.kelvinleandro.smartsomethingapp"/>
       </intent-filter>
     </activity>
+
+    <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyDNpbkpIVvaxR1MlKxi543hDRplIZsvyy4"/>
   </application>
 </manifest>

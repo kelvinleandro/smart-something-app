@@ -25,13 +25,16 @@ export const TcpSocketProvider = ({
   const [devicesStatus, setDevicesStatus] = useState<DeviceStatus[]>([
     { id: DeviceID.CAR_LOC, status: "Device Status Placeholder" },
     { id: DeviceID.HEADLIGHT, status: "Device Status Placeholder" },
+    { id: DeviceID.AC, status: "Device Status Placeholder" },
   ]);
 
   useEffect(() => {
     const newClient = TcpSocket.createConnection(
       {
-        host: "45.79.112.203",
-        port: 4242,
+        host: process.env.EXPO_PUBLIC_GATEWAY_IP || "45.79.112.203",
+        port: process.env.EXPO_PUBLIC_GATEWAY_PORT
+          ? parseInt(process.env.EXPO_PUBLIC_GATEWAY_PORT, 10)
+          : 4242,
       },
       () => {
         setClientStatus("Connected");
@@ -45,8 +48,8 @@ export const TcpSocketProvider = ({
         const decoded = messages.ClientResponse.decode(new Uint8Array(data));
         console.log("Decoded Message:", decoded);
 
-        // extracting device id and last state
-        const regex = /Device ID=([^,]+), LastState=(.+)/;
+        // extracting device id and state
+        const regex = /.*Device ID=([^,]+), (LastState|LastStateChanged)=(.+)/;
         const match = decoded.response.match(regex);
 
         if (match) {
@@ -88,7 +91,7 @@ export const TcpSocketProvider = ({
     };
   }, []);
 
-  const sendToServer = (message: string) => {
+  const sendToServer = (message: string, displayAlert = true) => {
     if (!client) {
       Alert.alert("Error", "Client not connected");
       return;
@@ -101,13 +104,13 @@ export const TcpSocketProvider = ({
       client.write(encodedMessage);
       console.log("Message sent successfully");
     } catch (err) {
-      // Alert.alert("Error", "Failed to send message");
+      if (displayAlert) Alert.alert("Error", "Failed to send message");
       console.error("Failed to encode message:", err);
     }
   };
 
-  const getDeviceState = (id: number) => {
-    sendToServer(`GET_DEVICE_STATE|${id}`);
+  const getDeviceState = (id: number, displayAlert: boolean = true) => {
+    sendToServer(`GET_DEVICE_STATE|${id}`, displayAlert);
   };
 
   const setDeviceState = (id: number, state: string) => {
@@ -119,7 +122,7 @@ export const TcpSocketProvider = ({
   //   if (!client) return;
   //   const interval = setInterval(() => {
   //     for (const id of DEVICES_IDS) {
-  //       getDeviceState(id);
+  //       getDeviceState(id, false);
   //     }
   //   }, 10000);
 

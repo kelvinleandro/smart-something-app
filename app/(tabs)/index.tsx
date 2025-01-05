@@ -10,6 +10,7 @@ import DeviceCard from "@/components/DeviceCard";
 import { FlatList } from "react-native-gesture-handler";
 import { TabsNavigationProp } from "@/types/tabs";
 import DeviceDialog from "@/components/DeviceDialog";
+import ConnectionStatusDot from "@/components/ConnectionStatusDot";
 
 export default function HomeScreen() {
   const { getDeviceState, clientStatus, devicesStatus } = useTcpSocket();
@@ -49,11 +50,9 @@ export default function HomeScreen() {
   return (
     <ScreenContainer style={styles.container}>
       <View style={styles.titleContainer}>
-        {/* <Text style={[styles.title, { color: theme.text }]}>My Devices</Text> */}
-        <Text style={[styles.title, { color: theme.text }]}>
-          Status: {clientStatus}
-        </Text>
-        <ColorSchemeButton style={styles.schemeButton} />
+        <ConnectionStatusDot />
+        <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
+        <ColorSchemeButton />
       </View>
 
       <Button title="Test Button" onPress={handleTestServer} />
@@ -94,11 +93,12 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: "space-between",
+    marginBottom: 12,
   },
   titleContainer: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   schemeButton: {
