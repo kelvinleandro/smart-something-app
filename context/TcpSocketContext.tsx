@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import TcpSocket from "react-native-tcp-socket";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { messages } from "@/types/proto";
 import { DeviceID, DeviceStatus } from "@/types/devices";
 import { DEVICES_IDS } from "@/constants/Devices";
 
 interface TcpSocketContextType {
   sendToServer: (message: string) => void;
-  clientStatus: string;
+  isClientConnected: boolean;
   devicesStatus: DeviceStatus[];
   getDeviceState: (id: number) => void;
   setDeviceState: (id: number, state: string) => void;
@@ -17,16 +18,55 @@ const TcpSocketContext = createContext<TcpSocketContextType | null>(null);
 
 export const TcpSocketProvider = ({
   children,
+  onReady,
 }: {
   children: React.ReactNode;
+  onReady?: () => void;
 }) => {
   const [client, setClient] = useState<TcpSocket.Socket | null>(null);
-  const [clientStatus, setClientStatus] = useState<string>("Disconnected");
+  const [isClientConnected, setIsClientConnected] = useState<boolean>(false);
   const [devicesStatus, setDevicesStatus] = useState<DeviceStatus[]>([
-    { id: DeviceID.CAR_LOC, status: "Device Status Placeholder" },
-    { id: DeviceID.HEADLIGHT, status: "Device Status Placeholder" },
-    { id: DeviceID.AC, status: "Device Status Placeholder" },
+    // { id: DeviceID.CAR_LOC, status: "Device Status Placeholder" },
+    // { id: DeviceID.HEADLIGHT, status: "Device Status Placeholder" },
+    // { id: DeviceID.AC, status: "Device Status Placeholder" },
   ]);
+
+  const STORAGE_KEY = "devicesStatus";
+  
+  // load devicesStatus
+  useEffect(() => {
+    const loadDevicesStatus = async () => {
+      try {
+        const storedStatus = await AsyncStorage.getItem(STORAGE_KEY);
+        if (storedStatus) {
+          setDevicesStatus(JSON.parse(storedStatus));
+        }
+      } catch (error) {
+        console.error("Failed to load devicesStatus:", error);
+      } finally {
+        if (onReady) onReady();
+      }
+    };
+
+    loadDevicesStatus();
+  }, []);
+
+  // save devicesStatus on unmount
+  useEffect(() => {
+    const saveDevicesStatusOnUnmount = async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(devicesStatus));
+      } catch (error) {
+        console.error("Failed to save devicesStatus:", error);
+      }
+    };
+  
+    return () => {
+      if (devicesStatus.length > 0) {
+        saveDevicesStatusOnUnmount();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const newClient = TcpSocket.createConnection(
@@ -37,14 +77,14 @@ export const TcpSocketProvider = ({
           : 4242,
       },
       () => {
-        setClientStatus("Connected");
+        setIsClientConnected(true);
         console.log("Connected to server");
       }
     );
 
     newClient.on("data", (data: any) => {
       try {
-        console.log("Received data:", data.toString());
+        console.log("Client received a message!")
         const decoded = messages.ClientResponse.decode(new Uint8Array(data));
         console.log("Decoded Message:", decoded);
 
@@ -52,9 +92,14 @@ export const TcpSocketProvider = ({
         const regex = /.*Device ID=([^,]+), (LastState|LastStateChanged)=(.+)/;
         const match = decoded.response.match(regex);
 
+        console.log("Match:", match);
+
         if (match) {
           const deviceId = parseInt(match[1], 10);
-          const lastState = match[2];
+          const lastState = match[3];
+
+          console.log("Device ID:", deviceId);
+          console.log("Last State:", lastState);
 
           setDevicesStatus((prevStatuses) => {
             const deviceIndex = prevStatuses.findIndex(
@@ -80,7 +125,7 @@ export const TcpSocketProvider = ({
     });
 
     newClient.on("close", () => {
-      setClientStatus("Disconnected");
+      setIsClientConnected(false);
       console.log("Connection closed");
     });
 
@@ -100,9 +145,7 @@ export const TcpSocketProvider = ({
     try {
       const request = messages.ClientMessage.create({ request: message });
       const encodedMessage = messages.ClientMessage.encode(request).finish();
-      console.log("Encoded Message:", encodedMessage);
       client.write(encodedMessage);
-      console.log("Message sent successfully");
     } catch (err) {
       if (displayAlert) Alert.alert("Error", "Failed to send message");
       console.error("Failed to encode message:", err);
@@ -118,22 +161,23 @@ export const TcpSocketProvider = ({
   };
 
   // periodic GET request
-  // useEffect(() => {
-  //   if (!client) return;
-  //   const interval = setInterval(() => {
-  //     for (const id of DEVICES_IDS) {
-  //       getDeviceState(id, false);
-  //     }
-  //   }, 10000);
+  useEffect(() => {
+    if (!client || !isClientConnected) return;
+    const interval = setInterval(() => {
+      // for (const id of DEVICES_IDS) {
+      //   getDeviceState(id, false);
+      // }
+      getDeviceState(DeviceID.CAR_LOC, false);
+    }, 5000);
 
-  //   return () => clearInterval(interval);
-  // }, [client]);
+    return () => clearInterval(interval);
+  }, [client, isClientConnected]);
 
   return (
     <TcpSocketContext.Provider
       value={{
         sendToServer,
-        clientStatus,
+        isClientConnected,
         devicesStatus,
         getDeviceState,
         setDeviceState,

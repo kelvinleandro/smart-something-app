@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import * as SplashScreen from "expo-splash-screen";
 
 type ColorScheme = "light" | "dark";
 
@@ -21,31 +20,26 @@ type ColorSchemeContextType = {
 
 export const ColorSchemeContext = createContext<ColorSchemeContextType | null>(null);
 
-export const ColorSchemeProvider = ({ children }: { children: React.ReactNode }) => {
+export const ColorSchemeProvider = ({ children, onReady }: { children: React.ReactNode, onReady?: () => void }) => {
   const deviceColorScheme = useColorScheme();
   const [currentColorScheme, setCurrentScheme] = useState<ColorScheme>("dark");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    SplashScreen.preventAutoHideAsync(); // Keep the splash screen visible
-  }, []);
 
   // on app startup
   useEffect(() => {
-    (async () => {
-      const savedColorScheme = await AsyncStorage.getItem("colorScheme");
+    const loadColorScheme = async () => {
+      try {
+        const savedColorScheme = await AsyncStorage.getItem("colorScheme");
+        if (savedColorScheme) {
+          setCurrentScheme(savedColorScheme as ColorScheme);
+        }
+      } catch (error) {
 
-      if (savedColorScheme) {
-        setCurrentScheme(savedColorScheme as ColorScheme);
-      } else {
-        const systemColorScheme = deviceColorScheme || "dark";
-        await AsyncStorage.setItem("colorScheme", systemColorScheme);
-        setCurrentScheme(systemColorScheme);
+      } finally {
+        if (onReady) onReady();
       }
-
-      setIsLoading(false);
-      await SplashScreen.hideAsync();
-    })();
+    }
+    
+    loadColorScheme();
   }, []);
 
   // when device color scheme changes
@@ -65,11 +59,6 @@ export const ColorSchemeProvider = ({ children }: { children: React.ReactNode })
     },
     [currentColorScheme]
   );
-
-  if (isLoading) {
-    // Optionally, you can return null here since the splash screen is handled by Expo
-    return null;
-  }
 
   return (
     <View style={{ flex: 1 }}>

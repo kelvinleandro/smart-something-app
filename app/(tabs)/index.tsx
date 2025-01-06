@@ -13,7 +13,7 @@ import DeviceDialog from "@/components/DeviceDialog";
 import ConnectionStatusDot from "@/components/ConnectionStatusDot";
 
 export default function HomeScreen() {
-  const { getDeviceState, clientStatus, devicesStatus } = useTcpSocket();
+  const { getDeviceState, isClientConnected, devicesStatus } = useTcpSocket();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [device, setDevice] = useState<DeviceStatus | null>(null);

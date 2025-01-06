@@ -3,12 +3,12 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTcpSocket } from "@/context/TcpSocketContext";
 
 const ConnectionStatusDot = () => {
-  const { clientStatus } = useTcpSocket();
+  const { isClientConnected } = useTcpSocket();
   return (
     <MaterialIcons
       name="circle"
       size={28}
-      color={clientStatus === "Connected" ? "green" : "red"}
+      color={isClientConnected ? "green" : "red"}
     />
   );
 };
