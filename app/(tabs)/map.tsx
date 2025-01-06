@@ -35,29 +35,27 @@ export default function MapScreen() {
       {isFocused && (
         <>
           <Text style={[styles.title, { color: theme.text }]}>
-            {carLoc ? carLoc.status : "Placeholder"}
+            Car Location
           </Text>
 
-          <View style={styles.mapWrapper}>
-            <MapView
-              style={styles.map}
-              region={{
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
-              }}
-            >
-              <Marker coordinate={coordinate} title="Your car">
-                <Image
-                  source={{
-                    uri: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Car_icon_alone.png",
-                  }}
-                  style={styles.mapPin}
-                />
-              </Marker>
-            </MapView>
-          </View>
+          <MapView
+            style={styles.mapContainer}
+            region={{
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
+              latitudeDelta: 0.001,
+              longitudeDelta: 0.001,
+            }}
+          >
+            <Marker coordinate={coordinate} title="Your car">
+              <Image
+                source={{
+                  uri: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Car_icon_alone.png",
+                }}
+                style={styles.mapPin}
+              />
+            </Marker>
+          </MapView>
         </>
       )}
     </ScreenContainer>
@@ -71,10 +69,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 12,
   },
-  mapWrapper: {
+  mapContainer: {
     width: "80%",
     height: "50%",
-    borderRadius: 12,
+    borderRadius: 48,
     overflow: "hidden",
   },
   map: {
