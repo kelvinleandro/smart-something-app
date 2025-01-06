@@ -164,10 +164,12 @@ export const TcpSocketProvider = ({
   useEffect(() => {
     if (!client || !isClientConnected) return;
     const interval = setInterval(() => {
-      // for (const id of DEVICES_IDS) {
-      //   getDeviceState(id, false);
-      // }
-      getDeviceState(DeviceID.CAR_LOC, false);
+      for (const id of DEVICES_IDS) {
+        if ((id === DeviceID.CAR_LOC) || (Math.random() < 0.2)) {
+          getDeviceState(id, false);
+        }
+      }
+      // getDeviceState(DeviceID.CAR_LOC, false);
     }, 5000);
 
     return () => clearInterval(interval);
