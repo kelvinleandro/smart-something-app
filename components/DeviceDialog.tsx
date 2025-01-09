@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Switch } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import Dialog from "./Dialog";
 import { DeviceID, DeviceStatus } from "@/types/devices";
 import useTheme from "@/hooks/useTheme";
 import { DEVICE_NAME } from "@/constants/Devices";
 import { useTcpSocket } from "@/context/TcpSocketContext";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const MIN_AC_LEVEL = 1;
 const MAX_AC_LEVEL = 3;
@@ -21,22 +21,32 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
 
   const { setDeviceState } = useTcpSocket();
   const theme = useTheme();
-  const isEnabled = useMemo(() => deviceInfo.status === "1", [deviceInfo]);
+  // const isEnabled = useMemo(
+  //   () => deviceInfo.id === DeviceID.HEADLIGHT && deviceInfo.status === "on",
+  //   [deviceInfo]
+  // );
+
+  const currentStatus = deviceInfo.id === DeviceID.HEADLIGHT
+    ? deviceInfo.status
+    : deviceInfo.status.split("|")[1];
+
+  const isEnabled =
+    deviceInfo.id === DeviceID.HEADLIGHT && deviceInfo.status === "on";
 
   const deviceName = DEVICE_NAME[deviceInfo.id];
 
   const handleSwitch = () => {
-    setDeviceState(deviceInfo.id, isEnabled ? "0" : "1");
+    setDeviceState(deviceInfo.id, isEnabled ? "off" : "on");
   };
 
   const handleIncrement = () => {
-    if (deviceInfo.status === `${MAX_AC_LEVEL}`) return;
-    setDeviceState(deviceInfo.id, (parseInt(deviceInfo.status) + 1).toString());
+    if (currentStatus === `${MAX_AC_LEVEL}`) return;
+    setDeviceState(deviceInfo.id, `AC|${parseInt(currentStatus, 10) + 1}|23`);
   };
 
   const handleDecrement = () => {
-    if (deviceInfo.status === `${MIN_AC_LEVEL}`) return;
-    setDeviceState(deviceInfo.id, (parseInt(deviceInfo.status) - 1).toString());
+    if (currentStatus === `${MIN_AC_LEVEL}`) return;
+    setDeviceState(deviceInfo.id, `AC|${parseInt(currentStatus, 10) - 1}|23`);
   };
 
   return (
@@ -48,7 +58,10 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
           </Text>
 
           <Text style={[styles.dialogText, { color: theme.text }]}>
-            Status: {deviceInfo.status}
+            Status:{" "}
+            {deviceInfo.id === DeviceID.HEADLIGHT
+              ? deviceInfo.status
+              : `Temperature ${deviceInfo.status.split("|")[2]}º`}
           </Text>
           {deviceInfo.id === DeviceID.HEADLIGHT ? (
             <>
@@ -89,20 +102,20 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
                   name="minuscircle"
                   size={32}
                   color={
-                    deviceInfo.status === `${MIN_AC_LEVEL}`
+                    currentStatus === `${MIN_AC_LEVEL}`
                       ? theme.text
                       : theme.cardBackground
                   }
                   onPress={handleDecrement}
                 />
                 <Text style={[styles.dialogText, { color: theme.text }]}>
-                  {deviceInfo.status}
+                  {currentStatus}
                 </Text>
                 <AntDesign
                   name="pluscircle"
                   size={32}
                   color={
-                    deviceInfo.status === `${MAX_AC_LEVEL}`
+                    currentStatus === `${MAX_AC_LEVEL}`
                       ? theme.text
                       : theme.cardBackground
                   }

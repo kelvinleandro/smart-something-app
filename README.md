@@ -41,14 +41,7 @@ Since the app uses `react-native-maps` and `react-native-theme-switch-animation`
    npm install
    ```
 
-3. **Configure the Environment**:
-   - Copy the `.env.example` file and rename it to `.env`:
-     ```bash
-     cp .env.example .env
-     ```
-   - Edit the `.env` file to include the gateway IP and port.
-
-4. **Add Google Maps API Key**:
+3. **Add Google Maps API Key**:
    - Open the `android/app/src/main/AndroidManifest.xml` file.
    - Add your Google Maps API key under the `<application>` tag:
      ```xml
@@ -57,7 +50,7 @@ Since the app uses `react-native-maps` and `react-native-theme-switch-animation`
          android:value="YOUR_GOOGLE_MAPS_API_KEY" />
      ```
 
-5. **Build the Project**:
+4. **Build the Project**:
    ```bash
    npx expo prebuild
    npx expo run:android # For Android
@@ -66,10 +59,19 @@ Since the app uses `react-native-maps` and `react-native-theme-switch-animation`
 
 ## Usage
 1. Launch the app on your device or emulator.
-2. Interact with the car devices via the user interface:
+2. On the initial screen, enter the gateway's host and port to establish a connection.
+3. Interact with the car devices via the user interface:
    - Adjust the air conditioner level.
    - Toggle the headlights.
    - View the car's current location on the map.
+
+## Testing with Static Data
+
+To test the app without a server connection, switch to the `static-version` branch. This version includes static data to simulate device interactions and car location.
+
+```bash
+git checkout static-version
+```
 
 ## Technologies Used
 - **React Native**

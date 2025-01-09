@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import useTheme from "@/hooks/useTheme";
 import { useNavigation } from "expo-router";
 import ScreenContainer from "@/components/ScreenContainer";
@@ -10,10 +10,10 @@ import DeviceCard from "@/components/DeviceCard";
 import { FlatList } from "react-native-gesture-handler";
 import { TabsNavigationProp } from "@/types/tabs";
 import DeviceDialog from "@/components/DeviceDialog";
-import ConnectionStatusDot from "@/components/ConnectionStatusDot";
+import ConnectionStatus from "@/components/ConnectionStatus";
 
 export default function HomeScreen() {
-  const { getDeviceState, isClientConnected, devicesStatus } = useTcpSocket();
+  const { devicesStatus } = useTcpSocket();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [device, setDevice] = useState<DeviceStatus | null>(null);
@@ -27,10 +27,6 @@ export default function HomeScreen() {
   const handleCloseModal = () => {
     setOpen(false);
     navigation.setOptions({ tabBarStyle: { display: undefined } });
-  };
-
-  const handleTestServer = () => {
-    getDeviceState(DeviceID.CAR_LOC);
   };
 
   const renderItem = (item: DeviceStatus) => {
@@ -50,13 +46,11 @@ export default function HomeScreen() {
   return (
     <ScreenContainer style={styles.container}>
       <View style={styles.titleContainer}>
-        <ConnectionStatusDot />
+        <ConnectionStatus />
         <Text style={[styles.title, { color: theme.text }]}>My Devices</Text>
         <ColorSchemeButton />
       </View>
 
-      <Button title="Test Button" onPress={handleTestServer} />
-      
       <FlatList
         style={styles.devices}
         data={devicesStatus}

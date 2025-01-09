@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text } from "react-native";
 import { useFocusEffect } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
 import useTheme from "@/hooks/useTheme";
@@ -11,14 +11,24 @@ export default function MapScreen() {
   const theme = useTheme();
   const { devicesStatus } = useTcpSocket();
   const carLoc = useMemo(
-    () => devicesStatus.find((d) => d.id === DeviceID.CAR_LOC),
+    () => {
+      const device = devicesStatus.find((d) => d.id === DeviceID.CAR_LOC);
+      if (device) {
+        const splitted = device.status.split("|");
+        return {
+          latitude: parseFloat(splitted[0]),
+          longitude: parseFloat(splitted[1])
+        }
+      }
+      
+      // default location to show in map
+      return {
+        latitude: -3.742008,
+        longitude: -38.574889,
+      }
+    },
     [devicesStatus]
   );
-
-  const [coordinate, setCoordinate] = useState({
-    latitude: -3.742008,
-    longitude: -38.574889,
-  });
   const [isFocused, setIsFocused] = useState(false);
 
   useFocusEffect(
@@ -41,13 +51,13 @@ export default function MapScreen() {
           <MapView
             style={styles.mapContainer}
             region={{
-              latitude: coordinate.latitude,
-              longitude: coordinate.longitude,
+              latitude: carLoc.latitude,
+              longitude: carLoc.longitude,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001,
             }}
           >
-            <Marker coordinate={coordinate} title="Your car">
+            <Marker coordinate={carLoc} title="Your car">
               <Image
                 source={{
                   uri: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Car_icon_alone.png",

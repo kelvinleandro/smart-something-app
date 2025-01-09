@@ -1,7 +1,7 @@
 export enum DeviceID {
-  AC = 1,
-  CAR_LOC = 2,
-  HEADLIGHT = 3
+  AC = "AC-1",
+  CAR_LOC = "CL-1",
+  HEADLIGHT = "HL-1"
 }
 
 export interface DeviceStatus {
