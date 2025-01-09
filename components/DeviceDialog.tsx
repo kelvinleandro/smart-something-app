@@ -1,5 +1,5 @@
+import React from "react";
 import { StyleSheet, Text, View, Switch } from "react-native";
-import React, { useMemo } from "react";
 import Dialog from "./Dialog";
 import { DeviceID, DeviceStatus } from "@/types/devices";
 import useTheme from "@/hooks/useTheme";
@@ -37,12 +37,12 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
 
   const handleIncrement = () => {
     if (currentStatus === `${MAX_AC_LEVEL}`) return;
-    setDeviceState(deviceInfo.id, `AC|${parseInt(currentStatus, 10) + 1}|23`);
+    setDeviceState(deviceInfo.id, `${parseInt(currentStatus, 10) + 1}`);
   };
 
   const handleDecrement = () => {
     if (currentStatus === `${MIN_AC_LEVEL}`) return;
-    setDeviceState(deviceInfo.id, `AC|${parseInt(currentStatus, 10) - 1}|23`);
+    setDeviceState(deviceInfo.id, `${parseInt(currentStatus, 10) - 1}`);
   };
 
   return (
@@ -57,7 +57,7 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
             Status:{" "}
             {deviceInfo.id === DeviceID.HEADLIGHT
               ? deviceInfo.status
-              : `Temperature ${deviceInfo.status.split("|")[2]}º`}
+              : `Temperature ${deviceInfo.status.split("|")[2]}°`}
           </Text>
           {deviceInfo.id === DeviceID.HEADLIGHT ? (
             <>
