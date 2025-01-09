@@ -4,6 +4,12 @@ apply plugin: "com.facebook.react"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
+def secrets = new Properties()
+def secretsFile = rootProject.file("local.properties")
+if (secretsFile.exists()) {
+    secrets.load(new FileInputStream(secretsFile))
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -93,6 +99,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        manifestPlaceholders = [
+            GOOGLE_MAPS_API_KEY: secrets.getProperty("GOOGLE_MAPS_API_KEY", "")
+        ]
     }
     signingConfigs {
         debug {

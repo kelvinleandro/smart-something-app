@@ -41,18 +41,18 @@ Since the app uses `react-native-maps` and `react-native-theme-switch-animation`
    npm install
    ```
 
-3. **Add Google Maps API Key**:
-   - Open the `android/app/src/main/AndroidManifest.xml` file.
-   - Add your Google Maps API key under the `<application>` tag:
-     ```xml
-     <meta-data
-         android:name="com.google.android.geo.API_KEY"
-         android:value="YOUR_GOOGLE_MAPS_API_KEY" />
-     ```
+3. **Configure the Google Maps API Key**:
+   - Copy the `android/local.properties.example` file and rename it to `local.properties`:
+      ```bash
+         cp android/local.properties.example android/local.properties
+      ```
+   - Edit the `android/local.properties` file to include your Google Maps API key:
+      ```
+      GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
+      ```
 
 4. **Build the Project**:
    ```bash
-   npx expo prebuild
    npx expo run:android # For Android
    npx expo run:ios     # For iOS (requires macOS)
    ```

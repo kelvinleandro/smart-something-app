@@ -21,10 +21,6 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
 
   const { setDeviceState } = useTcpSocket();
   const theme = useTheme();
-  // const isEnabled = useMemo(
-  //   () => deviceInfo.id === DeviceID.HEADLIGHT && deviceInfo.status === "on",
-  //   [deviceInfo]
-  // );
 
   const currentStatus = deviceInfo.id === DeviceID.HEADLIGHT
     ? deviceInfo.status
