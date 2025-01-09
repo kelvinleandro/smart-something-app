@@ -25,9 +25,6 @@ Since the app uses `react-native-maps` and `react-native-theme-switch-animation`
 - Expo CLI
 - React Native development environment (Android/iOS)
 - Google Maps API Key
-- `.env` file with the gateway IP and port configured (see `.env.example`)
-
-> **Note**: Without a properly configured `.env` file, the app will default to using a TCP echo server ([`tcpbin`](https://tcpbin.com/)), which disables full functionality.
 
 ## Installation
 1. **Clone the Repository**:
