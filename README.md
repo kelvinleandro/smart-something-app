@@ -9,6 +9,10 @@ This is a React Native project developed using TypeScript and Expo. It is a smar
 
 The app communicates with a gateway via TCP sockets, which in turn interfaces with the car devices. The gateway and devices are managed in a [separate repository](https://github.com/MateusSantos14/TrabalhoSistemasDistribuidos).
 
+## Preview
+
+<image src="assets/previews/connect_screen.png" style="width:175px;" /> <image src="assets/previews/home.png" style="width:175px;" /> <image src="assets/previews/map_screen.png" style="width:175px;" /> <image src="assets/previews/dialog_hl.png" style="width:175px;" /> <image src="assets/previews/dialog_ac.png" style="width:175px;" />
+
 ## Features
 - **Device State Monitoring**: Users can view the current state of supported devices.
 - **Device Control**: Users can control the air conditioner level and toggle the headlights.

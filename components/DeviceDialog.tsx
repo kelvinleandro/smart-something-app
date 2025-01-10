@@ -23,7 +23,7 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
   const theme = useTheme();
 
   const currentStatus = deviceInfo.id === DeviceID.HEADLIGHT
-    ? deviceInfo.status
+    ? deviceInfo.status.split('|')[1]
     : deviceInfo.status.split("|")[1];
 
   const isEnabled =
