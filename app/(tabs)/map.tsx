@@ -59,7 +59,7 @@ export default function MapScreen() {
       {isFocused && (
         <>
           <Text style={[styles.title, { color: theme.text }]}>
-            Car Location{`\n${carLoc.latitude}, ${carLoc.longitude}`}
+            Car Location
           </Text>
 
           <MapView
