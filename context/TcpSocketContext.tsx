@@ -34,11 +34,9 @@ export const TcpSocketProvider = ({
       setIsClientConnected(true);
       console.log("Connected to server");
     });
-    // 3.85.5.167
 
     newClient.on("data", (data: any) => {
       try {
-        console.log("Client received a message!");
         const decoded = messages.ClientResponse.decode(new Uint8Array(data));
         console.log("Decoded Message:", decoded);
 
@@ -49,15 +47,10 @@ export const TcpSocketProvider = ({
           const deviceId = match[1] as DeviceID;
           const lastState = match[3];
 
-          // console.log("Device ID:", deviceId);
-          // console.log("Last State:", lastState);
-
           setDevicesStatus((prevStatuses) => {
             const deviceIndex = prevStatuses.findIndex(
               (device) => device.id === deviceId
             );
-
-            console.log("(match) Updating devicesStatus...");
 
             if (deviceIndex !== -1) {
               const updatedStatuses = [...prevStatuses];
@@ -124,7 +117,7 @@ export const TcpSocketProvider = ({
     const interval = setInterval(() => {
       DEVICES_IDS.forEach((id) => {
         setTimeout(() => {
-          if (id === DeviceID.CAR_LOC || Math.random() < 0.5) {
+          if (id === DeviceID.CAR_LOC || Math.random() < 0.7) {
             getDeviceState(id, false);
           }
         }, 2000); // delay between messages

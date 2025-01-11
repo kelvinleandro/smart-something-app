@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Image, StyleSheet, Text } from "react-native";
 import { useFocusEffect } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
@@ -10,24 +10,40 @@ import { DeviceID } from "@/types/devices";
 export default function MapScreen() {
   const theme = useTheme();
   const { devicesStatus } = useTcpSocket();
-  const carLoc = (() => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+
+  const [carLoc, setCarLoc] = useState({
+    latitude: -3.742008,
+    longitude: -38.574889,
+  });
+
+  // updating carLoc based on devicesStatus
+  useEffect(() => {
     const device = devicesStatus.find((d) => d.id === DeviceID.CAR_LOC);
     if (device) {
       const splitted = device.status.split("|");
-      return {
-        latitude: parseFloat(splitted[0]),
-        longitude: parseFloat(splitted[1]),
-      };
+      const longitude = Number(splitted[0]);
+      const latitude = Number(splitted[1]);
+      if (!isNaN(latitude) && !isNaN(longitude)) {
+        setCarLoc({ latitude, longitude });
+      }
     }
+  }, [devicesStatus]);
 
-    // default location to show in map
-    return {
-      latitude: -3.742008,
-      longitude: -38.574889,
-    };
-  })();
+  // Simulated movement
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const interval = setInterval(() => {
+  //       setCarLoc((prev) => ({
+  //         latitude: prev.latitude + 0.0001,
+  //         longitude: prev.longitude + 0.0001,
+  //       }));
+  //     }, 2000);
 
-  const [isFocused, setIsFocused] = useState(false);
+  //     return () => clearInterval(interval);
+  //   }, [])
+  // );
 
   useFocusEffect(
     useCallback(() => {
@@ -48,21 +64,28 @@ export default function MapScreen() {
 
           <MapView
             style={styles.mapContainer}
+            onMapReady={() => setMapReady(true)}
+            pitchEnabled={false}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            rotateEnabled={false}
+            showsCompass={true}
             region={{
-              latitude: carLoc.latitude,
-              longitude: carLoc.longitude,
+              ...carLoc,
               latitudeDelta: 0.001,
               longitudeDelta: 0.001,
             }}
           >
-            <Marker coordinate={carLoc} title="Your car">
-              <Image
-                source={{
-                  uri: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Car_icon_alone.png",
-                }}
-                style={styles.mapPin}
-              />
-            </Marker>
+            {mapReady && (
+              <Marker coordinate={carLoc} title="Your car">
+                <Image
+                  source={{
+                    uri: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Car_icon_alone.png",
+                  }}
+                  style={styles.mapPin}
+                />
+              </Marker>
+            )}
           </MapView>
         </>
       )}

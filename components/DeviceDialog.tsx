@@ -22,12 +22,10 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
   const { setDeviceState } = useTcpSocket();
   const theme = useTheme();
 
-  const currentStatus = deviceInfo.id === DeviceID.HEADLIGHT
-    ? deviceInfo.status.split('|')[1]
-    : deviceInfo.status.split("|")[1];
+  const currentStatus = deviceInfo.status.split("|")[1].trim();
 
   const isEnabled =
-    deviceInfo.id === DeviceID.HEADLIGHT && deviceInfo.status === "on";
+    deviceInfo.id === DeviceID.HEADLIGHT && currentStatus === "on";
 
   const deviceName = DEVICE_NAME[deviceInfo.id];
 
@@ -56,7 +54,7 @@ const DeviceDialog = ({ isOpen, onClose, deviceInfo }: Props) => {
           <Text style={[styles.dialogText, { color: theme.text }]}>
             Status:{" "}
             {deviceInfo.id === DeviceID.HEADLIGHT
-              ? deviceInfo.status
+              ? currentStatus
               : `Temperature ${deviceInfo.status.split("|")[2]}°`}
           </Text>
           {deviceInfo.id === DeviceID.HEADLIGHT ? (
